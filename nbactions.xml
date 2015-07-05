@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>run</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.classpathScope>runtime</exec.classpathScope>
+                <exec.workingdir>/home/yk/Dropbox/JavaProjects/EternityEditor</exec.workingdir>
+                <exec.args>-Didle.office.hours=true -Dremote.sync=http://eternity.mkgi.net/ -classpath %classpath org.alcibiade.eternity.editor.application.ConsoleApp EternityII.txt "2xPipeline[600]"</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>debug</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.classpathScope>runtime</exec.classpathScope>
+                <exec.workingdir>/home/yk/Dropbox/JavaProjects/EternityEditor</exec.workingdir>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -Didle.office.hours=true -Dremote.sync=http://eternity.mkgi.net/ -classpath %classpath org.alcibiade.eternity.editor.application.ConsoleApp EternityII.txt "2xPipeline[600]"</exec.args>
+                <jpda.listen>true</jpda.listen>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>profile</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.args>${profiler.args} -Didle.office.hours=true -Dremote.sync=http://eternity.mkgi.net/ -classpath %classpath org.alcibiade.eternity.editor.application.ConsoleApp EternityII.txt "2xPipeline[600]"</exec.args>
+                <exec.workingdir>/home/yk/Dropbox/JavaProjects/EternityEditor</exec.workingdir>
+                <profiler.action>profile</profiler.action>
+                <exec.executable>${profiler.java}</exec.executable>
+            </properties>
+        </action>
+    </actions>
