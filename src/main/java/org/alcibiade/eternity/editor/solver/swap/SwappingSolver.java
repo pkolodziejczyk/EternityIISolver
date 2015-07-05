@@ -21,6 +21,8 @@
 package org.alcibiade.eternity.editor.solver.swap;
 
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.alcibiade.eternity.editor.model.GridModel;
 import org.alcibiade.eternity.editor.solver.ClusterManager;
@@ -56,9 +58,21 @@ public abstract class SwappingSolver extends EternitySolver {
 		iterationsLimit = limit;
 	}
 
+	private boolean displaystats=false;
 	@Override
 	public void run() {
 		notifyStart();
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			
+			
+
+			@Override
+			public void run() {
+				displaystats =true;
+			}
+			
+		}, 60_000, 60_000);
 		clusterManager.showStartMessage();
 
 		boolean solved = clusterManager.submitSolution(solutionGrid);
@@ -78,6 +92,10 @@ public abstract class SwappingSolver extends EternitySolver {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
+			}
+			if(displaystats){
+				displaystats=false;
+				clusterManager.showStats(iterations);
 			}
 		}
 

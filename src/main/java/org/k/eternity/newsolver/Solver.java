@@ -1,6 +1,8 @@
 package org.k.eternity.newsolver;
 
 import java.util.Arrays;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.IntStream;
 
 import org.alcibiade.eternity.editor.model.GridModel;
@@ -14,6 +16,8 @@ import org.k.eternity.HistoPlacing;
 import org.k.eternity.Orientation;
 import org.k.eternity.OrientedPiece;
 import org.k.eternity.Piece;
+
+import com.sun.jmx.snmp.tasks.Task;
 
 public class Solver extends EternitySolver implements ClusterListener {
 	private static final int PATTERN_NUMBER = 40;
@@ -57,10 +61,8 @@ public class Solver extends EternitySolver implements ClusterListener {
 
 	private void loadPieces() {
 		int id = 1;
-		internalID = IntStream.iterate(0, i -> -1).limit(PATTERN_NUMBER).boxed().mapToInt(e -> e)
-				.toArray();
-		externalID = IntStream.iterate(0, i -> -1).limit(PATTERN_NUMBER).boxed().mapToInt(e -> e)
-				.toArray();
+		internalID = IntStream.iterate(0, i -> -1).limit(PATTERN_NUMBER).boxed().mapToInt(e -> e).toArray();
+		externalID = IntStream.iterate(0, i -> -1).limit(PATTERN_NUMBER).boxed().mapToInt(e -> e).toArray();
 		maxAllocatedInternalId = 1;
 		pieces = new OrientedPiece[originGrid.getSize() * originGrid.getSize() + 1];
 		for (int row = 0; row < originGrid.getSize(); row++) {
@@ -69,11 +71,7 @@ public class Solver extends EternitySolver implements ClusterListener {
 				if (quad.getId() != 0) {
 					id = quad.getId();
 				}
-				OrientedPiece piece = new OrientedPiece(id,
-						mapToInternalID(quad.getPattern(QuadModel.DIR_NORTH).getCode()),
-						mapToInternalID(quad.getPattern(QuadModel.DIR_EAST).getCode()),
-						mapToInternalID(quad.getPattern(QuadModel.DIR_SOUTH).getCode()),
-						mapToInternalID(quad.getPattern(QuadModel.DIR_WEST).getCode()));
+				OrientedPiece piece = new OrientedPiece(id, mapToInternalID(quad.getPattern(QuadModel.DIR_NORTH).getCode()), mapToInternalID(quad.getPattern(QuadModel.DIR_EAST).getCode()), mapToInternalID(quad.getPattern(QuadModel.DIR_SOUTH).getCode()), mapToInternalID(quad.getPattern(QuadModel.DIR_WEST).getCode()));
 				if (quad.isLocked()) {
 					board.setPieceAt(piece, row, column);
 				} else {
@@ -188,22 +186,44 @@ public class Solver extends EternitySolver implements ClusterListener {
 
 		notifyEnd(solved);
 	}
+	boolean displaystats= false;
 
 	private boolean solve() {
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			
+			@Override
+			public void run() {
+				displaystats =true;
+			}
+			
+		}, 60_000, 60_000);
 		while (!isSolve) {
+			iterations++;
 			if (placePieceByHeatmap(pieces, getBoard())) {
-				iterations++;
-				if (currentHisto.getDeep() > maxDeep || slowmotion) {
+				if (currentHisto.getDeep() > maxDeep) {
 					maxDeep = currentHisto.getDeep();
 					updatedGridWithBoard(board, solutionGrid);
 					clusterManager.submitSolution(solutionGrid);
 				}
-				if (interrupted) {
-					return isSolve;
-				}
+				
 				currentHisto = currentHisto.revert(pieces, getBoard());
 			}
+			if(displaystats){
+				displaystats=false;
+				clusterManager.showStats(iterations);
+			}
+			if(slowmotion) {
+				System.out.println(currentHisto);
+				updatedGridWithBoard(board, solutionGrid);
+				clusterManager.submitSolution(solutionGrid);
+			}
+			if (interrupted) {
+				timer.cancel();
+				return isSolve;
+			}
 		}
+		timer.cancel();
 		return isSolve;
 	}
 

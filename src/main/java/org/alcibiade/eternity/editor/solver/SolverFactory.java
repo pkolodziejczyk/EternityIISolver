@@ -42,6 +42,7 @@ import org.alcibiade.eternity.editor.solver.swap.WeightedRandomMkV;
 import org.alcibiade.eternity.editor.solver.swap.WeightedRandomMkVI;
 import org.alcibiade.eternity.editor.solver.swap.WeightedRandomMkVII;
 import org.k.eternity.newsolver.Solver;
+import org.k.eternity.newsolver.SolverG2;
 
 public class SolverFactory {
 
@@ -61,12 +62,14 @@ public class SolverFactory {
 	public static final String LABEL_ASTARMKI = "A* MkI";
 	public static final String LABEL_PIPELINE = "Pipeline";
 	public static final String LABEL_HASH = "Simple Hash & Heatmap Solver";
+	public static final String LABEL_HASH_G2 = "G2 Hash & Heatmap Solver";
 
 	public static List<String> getAvailableSolvers() {
 		List<String> solvers = new ArrayList<String>();
 		// solvers.add(LABEL_ITPATHMKI);
 		// solvers.add(LABEL_ITPATHMKII);
 		solvers.add(LABEL_HASH);
+		solvers.add(LABEL_HASH_G2);
 		solvers.add(LABEL_ITPATHMKIII);
 		solvers.add(LABEL_ITPATHMKIV);
 		solvers.add(LABEL_SWAPDUMB);
@@ -90,6 +93,8 @@ public class SolverFactory {
 		EternitySolver solver = null;
 		if(LABEL_HASH.equalsIgnoreCase(type)){
 			solver = new Solver(pieces, solution, clusterManager);
+		}else if(LABEL_HASH_G2.equals(type)){
+			solver = new SolverG2(pieces, solution, clusterManager);
 		} else if (LABEL_ITPATHMKI.equalsIgnoreCase(type)) {
 			solver = new IterativePathSolverMkI(pieces, solution, clusterManager, path);
 		} else if (LABEL_ITPATHMKII.equalsIgnoreCase(type)) {

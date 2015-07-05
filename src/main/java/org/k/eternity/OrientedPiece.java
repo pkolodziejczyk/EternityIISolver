@@ -11,6 +11,7 @@ package org.k.eternity;
 public class OrientedPiece extends Piece{
 	
 	private Orientation orientation = Orientation.TOP;
+	private boolean isLock = false;
 
 	public Orientation getOrientation() {
 		return orientation;
@@ -132,4 +133,13 @@ public class OrientedPiece extends Piece{
 	public String toString() {
 		return getId()+"/"+orientation;
 	}
+
+	public boolean isLock() {
+		return isLock;
+	}
+
+	public void setLock(boolean isLock) {
+		this.isLock = isLock;
+	}
+
 }
