@@ -26,6 +26,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.k.eternity.Piece;
+
 public class QuadModel implements Cloneable, Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -41,6 +43,7 @@ public class QuadModel implements Cloneable, Serializable {
 	private Pattern defaultpat;
 	private boolean locked = false;
 	private boolean readOnly = false;
+	private int id;
 
 	public QuadModel() {
 		defaultpat = Pattern.getDefaultPattern();
@@ -78,10 +81,23 @@ public class QuadModel implements Cloneable, Serializable {
 		q.patterns[DIR_SOUTH] = patterns[DIR_SOUTH];
 		q.patterns[DIR_WEST] = patterns[DIR_WEST];
 		q.locked = isLocked();
+		q.id = this.id;
 
 		if (notifyObservers) {
 			q.notifyQuadUpdated();
 		}
+	}
+	
+	public void loadFromPiece(Piece piece){
+		this.setId(piece.getId());
+		this.setPattern(QuadModel.DIR_NORTH,
+				Pattern.getPatternByCode(piece.getTop()));
+		this.setPattern(QuadModel.DIR_EAST,
+				Pattern.getPatternByCode(piece.getRight()));
+		this.setPattern(QuadModel.DIR_SOUTH,
+				Pattern.getPatternByCode(piece.getBot()));
+		this.setPattern(QuadModel.DIR_WEST,
+				Pattern.getPatternByCode(piece.getLeft()));
 	}
 
 	public boolean isClear() {
@@ -372,5 +388,13 @@ public class QuadModel implements Cloneable, Serializable {
 			Pattern pattern = Pattern.getPatternByCode(patternCode);
 			setPattern(i, pattern);
 		}
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 }

@@ -105,21 +105,21 @@ public class GridAnalyst implements GridObserver, QuadObserver {
 	}
 
 	private void updateGridErrors(GridModel gridModel) {
-		Set<Pattern> oddPatterns = new HashSet<Pattern>();
-
-		for (Pattern pattern : Pattern.getNonDefaultPatterns()) {
-			int occurences = gridModel.countOccurences(pattern);
-			if ((occurences % 2) == 1) {
-				oddPatterns.add(pattern);
-			}
-		}
-
-		for (QuadView quadView : gridView.getQuadViews()) {
-			for (int direction = 0; direction < 4; direction++) {
-				quadView.setError(direction, oddPatterns.contains(quadView.getModel().getPattern(
-						direction)));
-			}
-		}
+//		Set<Pattern> oddPatterns = new HashSet<Pattern>();
+//
+//		for (Pattern pattern : Pattern.getNonDefaultPatterns()) {
+//			int occurences = gridModel.countOccurences(pattern);
+//			if ((occurences % 2) == 1) {
+//				oddPatterns.add(pattern);
+//			}
+//		}
+//
+//		for (QuadView quadView : gridView.getQuadViews()) {
+//			for (int direction = 0; direction < 4; direction++) {
+//				quadView.setError(direction, oddPatterns.contains(quadView.getModel().getPattern(
+//						direction)));
+//			}0
+//		}
 
 	}
 }

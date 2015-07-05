@@ -31,6 +31,8 @@ import java.util.StringTokenizer;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 
+import org.k.eternity.OrientedPiece;
+
 public class GridModel extends AbstractQuadGrid implements Cloneable {
 
 	private static final long serialVersionUID = 1L;
@@ -74,7 +76,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void setSize(int size) {
-		assert !readOnly;
+		assert!readOnly;
 
 		super.setSize(size, size);
 		notifyGridSizeUpdated();
@@ -93,7 +95,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void reset() {
-		assert !readOnly;
+		assert!readOnly;
 
 		for (QuadModel quad : gridQuads) {
 			quad.clear();
@@ -101,7 +103,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void shuffle() {
-		assert !readOnly;
+		assert!readOnly;
 
 		Random rand = new Random();
 
@@ -146,7 +148,8 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 					QuadModel eastquad = getQuad(x + 1, y);
 					Pattern eastpat = quad.getPattern(QuadModel.DIR_EAST);
 
-					if (eastpat != defaultpat && eastpat == eastquad.getPattern(QuadModel.DIR_WEST)) {
+					if (eastpat != defaultpat
+							&& eastpat == eastquad.getPattern(QuadModel.DIR_WEST)) {
 						pairs++;
 					}
 				}
@@ -325,7 +328,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void fromQuadString(String text) throws QuadsFormatException {
-		assert !readOnly;
+		assert!readOnly;
 
 		text = stripComments(text);
 
@@ -399,6 +402,22 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 		}
 	}
 
+	public void fromOrientedPieces(OrientedPiece[] pieces) throws QuadsFormatException {
+		int index = 0;
+		for (OrientedPiece orientedPiece : pieces) {
+			if (orientedPiece == null) {
+				continue;
+			}
+			QuadModel quad = this.getQuad(index);
+			while (quad.getId() != 0) {
+				index++;
+				 quad = this.getQuad(index);
+			}
+				quad.loadFromPiece(orientedPiece);
+				index++;
+		}
+	}
+
 	private String stripComments(String text) {
 		text = text.replace('\r', '\n');
 		java.util.regex.Pattern pattern = java.util.regex.Pattern.compile("#.*[\n]",
@@ -420,14 +439,14 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 		}
 	}
 
-	private void notifyGridUpdated() {
+	public void notifyGridUpdated() {
 		for (GridObserver observer : gridObservers) {
 			observer.gridUpdated();
 		}
 	}
 
 	public int optimizeQuadRotation(int index) {
-		assert !readOnly;
+		assert!readOnly;
 
 		int bestOrientation = 0;
 		int best_pairs = 0;
@@ -453,7 +472,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void swap(int indexA, int indexB) {
-		assert !readOnly;
+		assert!readOnly;
 
 		QuadModel quadA = getQuad(indexA);
 		QuadModel quadB = getQuad(indexB);
@@ -591,7 +610,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void rotateClockwise(int steps) {
-		assert !readOnly;
+		assert!readOnly;
 
 		for (int i = 0; i < steps; i++) {
 			rotateClockwise();
@@ -599,7 +618,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void rotateCounterclockwise(int steps) {
-		assert !readOnly;
+		assert!readOnly;
 
 		for (int i = 0; i < steps; i++) {
 			rotateCounterclockwise();
@@ -607,12 +626,12 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void rotateCounterclockwise() {
-		assert !readOnly;
+		assert!readOnly;
 		rotateClockwise(3);
 	}
 
 	public void rotateClockwise() {
-		assert !readOnly;
+		assert!readOnly;
 
 		List<QuadModel> originalQuads = new ArrayList<QuadModel>();
 		for (QuadModel quad : gridQuads) {
@@ -630,7 +649,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void rotateCenterClockwise(int steps) {
-		assert !readOnly;
+		assert!readOnly;
 
 		for (int i = 0; i < steps; i++) {
 			rotateCenterClockwise();
@@ -638,7 +657,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void rotateCenterClockwise() {
-		assert !readOnly;
+		assert!readOnly;
 
 		List<QuadModel> originalQuads = new ArrayList<QuadModel>();
 		for (QuadModel quad : gridQuads) {
@@ -656,7 +675,7 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void rotateCenterCounterclockwise(int steps) {
-		assert !readOnly;
+		assert!readOnly;
 
 		for (int i = 0; i < steps; i++) {
 			rotateCenterCounterclockwise();
@@ -664,19 +683,19 @@ public class GridModel extends AbstractQuadGrid implements Cloneable {
 	}
 
 	public void rotateCenterCounterclockwise() {
-		assert !readOnly;
+		assert!readOnly;
 		rotateCenterClockwise(3);
 	}
 
 	public void flipVertical() {
-		assert !readOnly;
+		assert!readOnly;
 		rotateClockwise();
 		flipHorizontal();
 		rotateCounterclockwise();
 	}
 
 	public void flipHorizontal() {
-		assert !readOnly;
+		assert!readOnly;
 		List<QuadModel> originalQuads = new ArrayList<QuadModel>();
 		for (QuadModel quad : gridQuads) {
 			originalQuads.add(quad.clone());

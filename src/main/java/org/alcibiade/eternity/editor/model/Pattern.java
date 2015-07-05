@@ -158,270 +158,331 @@ public enum Pattern implements Comparable<Pattern>, Serializable {
 		double cx = w / 2.;
 		double cy = h / 2.;
 		double minsize = Math.min(w, h);
-
-		if (patternShape == PatternShape.SHAPE_NONE) {
+		
+		switch (patternShape) {
+		case SHAPE_NONE:
 			// Nothing to do
-		} else if (patternShape == PatternShape.SHAPE_ROUNDCROSS) {
-			double rad_ext = minsize * 0.60;
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(new Ellipse2D.Double(cx - rad_ext / 2, cy - rad_ext / 2, rad_ext, rad_ext));
-
-			double rad_in = minsize * 0.28;
-			double rad_out = minsize * 0.22;
-
-			g2d.setPaint(grad_back);
-			g2d.fill(new Ellipse2D.Double(cx - rad_out - rad_in / 2, cy - rad_out - rad_in / 2,
-					rad_in, rad_in));
-			g2d.fill(new Ellipse2D.Double(cx - rad_out - rad_in / 2, cy + rad_out - rad_in / 2,
-					rad_in, rad_in));
-			g2d.fill(new Ellipse2D.Double(cx + rad_out - rad_in / 2, cy - rad_out - rad_in / 2,
-					rad_in, rad_in));
-			g2d.fill(new Ellipse2D.Double(cx + rad_out - rad_in / 2, cy + rad_out - rad_in / 2,
-					rad_in, rad_in));
-
-		} else if (patternShape == PatternShape.SHAPE_HOLLOWCROSS) {
-			double rad_ext = minsize * 0.60;
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(new Rectangle2D.Double(cx - rad_ext / 2, cy - rad_ext / 2, rad_ext, rad_ext));
-
-			double rad_in = minsize * 0.40;
-			double rad_out = rad_ext * 0.52;
-
-			g2d.setPaint(grad_back);
-			g2d.fill(new Ellipse2D.Double(cx - rad_out - rad_in / 2, cy - rad_out - rad_in / 2,
-					rad_in, rad_in));
-			g2d.fill(new Ellipse2D.Double(cx - rad_out - rad_in / 2, cy + rad_out - rad_in / 2,
-					rad_in, rad_in));
-			g2d.fill(new Ellipse2D.Double(cx + rad_out - rad_in / 2, cy - rad_out - rad_in / 2,
-					rad_in, rad_in));
-			g2d.fill(new Ellipse2D.Double(cx + rad_out - rad_in / 2, cy + rad_out - rad_in / 2,
-					rad_in, rad_in));
-
-			double rad_hole = minsize * 0.15;
-
-			GeneralPath inside = new GeneralPath();
-			inside.moveTo((float) (cx), (float) (cy - rad_hole));
-			inside.lineTo((float) (cx + rad_hole), (float) (cy));
-			inside.lineTo((float) (cx), (float) (cy + rad_hole));
-			inside.lineTo((float) (cx - rad_hole), (float) (cy));
-			g2d.fill(inside);
-		} else if (patternShape == PatternShape.SHAPE_BOULON) {
-			double p1 = minsize * 0.4;
-			double p2 = p1 * 0.66;
-			double p3 = p1 * 0.33;
-
-			GeneralPath boulon = new GeneralPath();
-			boulon.moveTo((float) (cx - p2), (float) (cy));
-			boulon.lineTo((float) (cx - p2), (float) (cy - p3));
-			boulon.lineTo((float) (cx - p3), (float) (cy - p2));
-			boulon.lineTo((float) (cx), (float) (cy - p2));
-			boulon.lineTo((float) (cx + p3), (float) (cy - p2));
-			boulon.lineTo((float) (cx + p2), (float) (cy - p3));
-			boulon.lineTo((float) (cx + p2), (float) (cy));
-			boulon.lineTo((float) (cx + p2), (float) (cy + p3));
-			boulon.lineTo((float) (cx + p3), (float) (cy + p2));
-			boulon.lineTo((float) (cx), (float) (cy + p2));
-			boulon.lineTo((float) (cx - p3), (float) (cy + p2));
-			boulon.lineTo((float) (cx - p2), (float) (cy + p3));
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(boulon);
-
-			double rad_in = minsize * 0.27;
-
-			g2d.setPaint(grad_back);
-			g2d.fill(new Ellipse2D.Double(cx - rad_in / 2, cy - rad_in / 2, rad_in, rad_in));
-
-		} else if (patternShape == PatternShape.SHAPE_FLOWER) {
-			double rad = minsize / 7;
-
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(new Ellipse2D.Double(cx - 2 * rad, cy - 1 * rad, 2 * rad, 2 * rad));
-			g2d.fill(new Ellipse2D.Double(cx - 1 * rad, cy - 2 * rad, 2 * rad, 2 * rad));
-			g2d.fill(new Ellipse2D.Double(cx + 0 * rad, cy - 1 * rad, 2 * rad, 2 * rad));
-			g2d.fill(new Ellipse2D.Double(cx - 1 * rad, cy + 0 * rad, 2 * rad, 2 * rad));
-
-			rad *= 0.9;
-
-			g2d.setPaint(grad_back);
-			g2d.fill(new Ellipse2D.Double(cx - rad, cy - rad, 2 * rad, 2 * rad));
-		} else if (patternShape == PatternShape.SHAPE_LYS) {
-			double p1 = minsize * 0.35;
-			double p2 = p1 * 0.66;
-			double p3 = p1 * 0.33;
-			double p4 = p1 * 0.20;
-
-			g2d.setColor(patternFg.getColor());
-			GeneralPath lys = new GeneralPath();
-			lys.moveTo((float) (cx - p1), (float) (cy));
-			lys.lineTo((float) (cx - p2), (float) (cy - p3));
-			lys.lineTo((float) (cx - p4), (float) (cy - p4));
-			lys.lineTo((float) (cx - p3), (float) (cy - p2));
-			lys.lineTo((float) (cx), (float) (cy - p1));
-			lys.lineTo((float) (cx + p3), (float) (cy - p2));
-			lys.lineTo((float) (cx + p4), (float) (cy - p4));
-			lys.lineTo((float) (cx + p2), (float) (cy - p3));
-			lys.lineTo((float) (cx + p1), (float) (cy));
-			lys.lineTo((float) (cx + p2), (float) (cy + p3));
-			lys.lineTo((float) (cx + p4), (float) (cy + p4));
-			lys.lineTo((float) (cx + p3), (float) (cy + p2));
-			lys.lineTo((float) (cx), (float) (cy + p1));
-			lys.lineTo((float) (cx - p3), (float) (cy + p2));
-			lys.lineTo((float) (cx - p4), (float) (cy + p4));
-			lys.lineTo((float) (cx - p2), (float) (cy + p3));
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(lys);
-		} else if (patternShape == PatternShape.SHAPE_ROUNDCASTLE) {
-			double p1 = minsize * 0.23;
-			double p2 = p1 * 0.90; // Main circle radius
-			double p3 = p1 * 0.45; // External circles radius
-			double p4 = p1 * 0.90; // Inner star major radius
-			double p5 = p1 * 0.30; // Inner star minor radius
-
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(new Ellipse2D.Double(cx - p2, cy - p2, 2 * p2, 2 * p2));
-			g2d.fill(new Ellipse2D.Double(cx - p1 - p3, cy - p3, 2 * p3, 2 * p3));
-			g2d.fill(new Ellipse2D.Double(cx - p3, cy - p1 - p3, 2 * p3, 2 * p3));
-			g2d.fill(new Ellipse2D.Double(cx + p1 - p3, cy - p3, 2 * p3, 2 * p3));
-			g2d.fill(new Ellipse2D.Double(cx - p3, cy + p1 - p3, 2 * p3, 2 * p3));
-
-			GeneralPath innerStar = new GeneralPath();
-			innerStar.moveTo((float) (cx), (float) (cy - p4));
-			innerStar.lineTo((float) (cx + p5), (float) (cy - p5));
-			innerStar.lineTo((float) (cx + p4), (float) (cy));
-			innerStar.lineTo((float) (cx + p5), (float) (cy + p5));
-			innerStar.lineTo((float) (cx), (float) (cy + p4));
-			innerStar.lineTo((float) (cx - p5), (float) (cy + p5));
-			innerStar.lineTo((float) (cx - p4), (float) (cy));
-			innerStar.lineTo((float) (cx - p5), (float) (cy - p5));
-			innerStar.lineTo((float) (cx), (float) (cy - p4));
-
-			g2d.setColor(patternBg.getColor());
-			g2d.fill(innerStar);
-		} else if (patternShape == PatternShape.SHAPE_CROSSBALLS) {
-			double p1 = minsize * 0.23;
-			double p2 = p1 * 0.30;
-			double p3 = p1 * 0.45;
-
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(new Rectangle2D.Double(cx - p1, cy - p2, 2 * p1, 2 * p2));
-			g2d.fill(new Rectangle2D.Double(cx - p2, cy - p1, 2 * p2, 2 * p1));
-			g2d.fill(new Ellipse2D.Double(cx - p1 - p3, cy - p3, 2 * p3, 2 * p3));
-			g2d.fill(new Ellipse2D.Double(cx - p3, cy - p1 - p3, 2 * p3, 2 * p3));
-			g2d.fill(new Ellipse2D.Double(cx + p1 - p3, cy - p3, 2 * p3, 2 * p3));
-			g2d.fill(new Ellipse2D.Double(cx - p3, cy + p1 - p3, 2 * p3, 2 * p3));
-		} else if (patternShape == PatternShape.SHAPE_CASTLE) {
-			double p1 = minsize * 0.35;
-			double p2 = p1 * 0.66;
-			double p3 = p1 * 0.33;
-			double p4 = p1 * 0.15;
-
-			GeneralPath castle = new GeneralPath();
-			castle.moveTo((float) (cx - p1), (float) (cy));
-			castle.lineTo((float) (cx - p2), (float) (cy - p3));
-			castle.lineTo((float) (cx - p2 + p4), (float) (cy - p3 + p4));
-			castle.lineTo((float) (cx - p3 + p4), (float) (cy - p2 + p4));
-			castle.lineTo((float) (cx - p3), (float) (cy - p2));
-			castle.lineTo((float) (cx), (float) (cy - p1));
-			castle.lineTo((float) (cx + p3), (float) (cy - p2));
-			castle.lineTo((float) (cx + p3 - p4), (float) (cy - p2 + p4));
-			castle.lineTo((float) (cx + p2 - p4), (float) (cy - p3 + p4));
-			castle.lineTo((float) (cx + p2), (float) (cy - p3));
-			castle.lineTo((float) (cx + p1), (float) (cy));
-			castle.lineTo((float) (cx + p2), (float) (cy + p3));
-			castle.lineTo((float) (cx + p2 - p4), (float) (cy + p3 - p4));
-			castle.lineTo((float) (cx + p3 - p4), (float) (cy + p2 - p4));
-			castle.lineTo((float) (cx + p3), (float) (cy + p2));
-			castle.lineTo((float) (cx), (float) (cy + p1));
-			castle.lineTo((float) (cx - p3), (float) (cy + p2));
-			castle.lineTo((float) (cx - p3 + p4), (float) (cy + p2 - p4));
-			castle.lineTo((float) (cx - p2 + p4), (float) (cy + p3 - p4));
-			castle.lineTo((float) (cx - p2), (float) (cy + p3));
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(castle);
-			g2d.setColor(patternFg.getColor().darker());
-			g2d.draw(castle);
-		} else if (patternShape == PatternShape.SHAPE_SQUARE) {
-			double p1 = minsize * 0.35;
-			double p2 = p1 * 0.50;
-
-			GeneralPath square_ext = new GeneralPath();
-			square_ext.moveTo((float) (cx - p1), (float) (cy));
-			square_ext.lineTo((float) (cx), (float) (cy - p1));
-			square_ext.lineTo((float) (cx + p1), (float) (cy));
-			square_ext.lineTo((float) (cx), (float) (cy + p1));
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(square_ext);
-			g2d.setColor(patternFg.getColor().darker());
-			g2d.draw(square_ext);
-
-			GeneralPath square_int = new GeneralPath();
-			square_int.moveTo((float) (cx - p2), (float) (cy));
-			square_int.lineTo((float) (cx), (float) (cy - p2));
-			square_int.lineTo((float) (cx + p2), (float) (cy));
-			square_int.lineTo((float) (cx), (float) (cy + p2));
-			g2d.setColor(patternBg.getColor());
-			g2d.fill(square_int);
-			g2d.setColor(patternBg.getColor().darker());
-			g2d.draw(square_int);
-		} else if (patternShape == PatternShape.SHAPE_TOXIC) {
-			double p1 = minsize * 0.30;
-			double p2 = p1 * 0.30;
-			double p3 = p2 * 1.10;
-
-			Ellipse2D circle_ext = new Ellipse2D.Double(cx - p1, cy - p1, 2 * p1, 2 * p1);
-			g2d.setColor(patternFg.getColor());
-			g2d.fill(circle_ext);
-			g2d.setColor(patternFg.getColor().darker());
-			g2d.draw(circle_ext);
-
-			GeneralPath cross_int = new GeneralPath();
-			cross_int.moveTo((float) (cx - p2), (float) (cy));
-			cross_int.lineTo((float) (cx - p2 - p3), (float) (cy - p3));
-			cross_int.lineTo((float) (cx - p3), (float) (cy - p2 - p3));
-
-			cross_int.lineTo((float) (cx), (float) (cy - p2));
-			cross_int.lineTo((float) (cx + p3), (float) (cy - p2 - p3));
-			cross_int.lineTo((float) (cx + p2 + p3), (float) (cy - p3));
-
-			cross_int.lineTo((float) (cx + p2), (float) (cy));
-			cross_int.lineTo((float) (cx + p2 + p3), (float) (cy + p3));
-			cross_int.lineTo((float) (cx + p3), (float) (cy + p2 + p3));
-
-			cross_int.lineTo((float) (cx), (float) (cy + p2));
-			cross_int.lineTo((float) (cx - p3), (float) (cy + p2 + p3));
-			cross_int.lineTo((float) (cx - p2 - p3), (float) (cy + p3));
-
-			g2d.setColor(patternBg.getColor());
-			g2d.fill(cross_int);
-			g2d.setColor(patternBg.getColor().darker());
-			g2d.draw(cross_int);
-		} else if (patternShape == PatternShape.SHAPE_STAR) {
-			double rad1 = minsize * 0.3;
-			double rad2 = rad1 * 0.5;
-
-			g2d.setColor(patternFg.getColor());
-			GeneralPath star = new GeneralPath();
-			star.moveTo((float) (cx - rad1), (float) (cy));
-
-			for (int a = 0; a <= 360; a += 30) {
-				double rad;
-
-				if (a % 60 == 0) {
-					rad = rad1;
-				} else {
-					rad = rad2;
-				}
-
-				double arad = Math.PI * 2. * a / 360.;
-
-				star.lineTo((float) (cx + rad * Math.cos(arad)),
-						(float) (cy + rad * Math.sin(arad)));
-			}
-
-			g2d.fill(star);
+			break;
+		case SHAPE_ROUNDCROSS:
+			paintRoundcross(g2d, grad_back, cx, cy, minsize);
+			break;
+		case SHAPE_HOLLOWCROSS:
+			paintHollowcross(g2d, grad_back, cx, cy, minsize);
+			break;
+		case SHAPE_BOULON:
+			paintBoulon(g2d, grad_back, cx, cy, minsize);
+			break;
+		case SHAPE_FLOWER :
+			paintFlower(g2d, grad_back, cx, cy, minsize);
+			break;
+		case SHAPE_LYS:
+			paintLys(g2d, cx, cy, minsize);
+			break;
+		case SHAPE_ROUNDCASTLE:
+			paintRoundcastle(g2d, cx, cy, minsize);
+			break;
+		case SHAPE_CROSSBALLS:
+			paintCrossballs(g2d, cx, cy, minsize);
+			break;
+		case SHAPE_CASTLE:
+			paintCastle(g2d, cx, cy, minsize);
+			break;
+		case SHAPE_SQUARE:
+			paintSquare(g2d, cx, cy, minsize);
+			break;
+		case SHAPE_TOXIC :
+			paintToxic(g2d, cx, cy, minsize);
+			break;
+		case SHAPE_STAR:
+			paintStar(g2d, cx, cy, minsize);
+			break;
+		default:
+			break;
 		}
 
 		g2d.setClip(previous_clip);
+	}
+
+	private void paintRoundcross(Graphics2D g2d, GradientPaint grad_back, double cx, double cy,
+			double minsize) {
+		double rad_ext = minsize * 0.60;
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(new Ellipse2D.Double(cx - rad_ext / 2, cy - rad_ext / 2, rad_ext, rad_ext));
+
+		double rad_in = minsize * 0.28;
+		double rad_out = minsize * 0.22;
+
+		g2d.setPaint(grad_back);
+		g2d.fill(new Ellipse2D.Double(cx - rad_out - rad_in / 2, cy - rad_out - rad_in / 2,
+				rad_in, rad_in));
+		g2d.fill(new Ellipse2D.Double(cx - rad_out - rad_in / 2, cy + rad_out - rad_in / 2,
+				rad_in, rad_in));
+		g2d.fill(new Ellipse2D.Double(cx + rad_out - rad_in / 2, cy - rad_out - rad_in / 2,
+				rad_in, rad_in));
+		g2d.fill(new Ellipse2D.Double(cx + rad_out - rad_in / 2, cy + rad_out - rad_in / 2,
+				rad_in, rad_in));
+	}
+
+	private void paintHollowcross(Graphics2D g2d, GradientPaint grad_back, double cx, double cy,
+			double minsize) {
+		double rad_ext = minsize * 0.60;
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(new Rectangle2D.Double(cx - rad_ext / 2, cy - rad_ext / 2, rad_ext, rad_ext));
+
+		double rad_in = minsize * 0.40;
+		double rad_out = rad_ext * 0.52;
+
+		g2d.setPaint(grad_back);
+		g2d.fill(new Ellipse2D.Double(cx - rad_out - rad_in / 2, cy - rad_out - rad_in / 2,
+				rad_in, rad_in));
+		g2d.fill(new Ellipse2D.Double(cx - rad_out - rad_in / 2, cy + rad_out - rad_in / 2,
+				rad_in, rad_in));
+		g2d.fill(new Ellipse2D.Double(cx + rad_out - rad_in / 2, cy - rad_out - rad_in / 2,
+				rad_in, rad_in));
+		g2d.fill(new Ellipse2D.Double(cx + rad_out - rad_in / 2, cy + rad_out - rad_in / 2,
+				rad_in, rad_in));
+
+		double rad_hole = minsize * 0.15;
+
+		GeneralPath inside = new GeneralPath();
+		inside.moveTo((float) (cx), (float) (cy - rad_hole));
+		inside.lineTo((float) (cx + rad_hole), (float) (cy));
+		inside.lineTo((float) (cx), (float) (cy + rad_hole));
+		inside.lineTo((float) (cx - rad_hole), (float) (cy));
+		g2d.fill(inside);
+	}
+
+	private void paintBoulon(Graphics2D g2d, GradientPaint grad_back, double cx, double cy,
+			double minsize) {
+		double p1 = minsize * 0.4;
+		double p2 = p1 * 0.66;
+		double p3 = p1 * 0.33;
+
+		GeneralPath boulon = new GeneralPath();
+		boulon.moveTo((float) (cx - p2), (float) (cy));
+		boulon.lineTo((float) (cx - p2), (float) (cy - p3));
+		boulon.lineTo((float) (cx - p3), (float) (cy - p2));
+		boulon.lineTo((float) (cx), (float) (cy - p2));
+		boulon.lineTo((float) (cx + p3), (float) (cy - p2));
+		boulon.lineTo((float) (cx + p2), (float) (cy - p3));
+		boulon.lineTo((float) (cx + p2), (float) (cy));
+		boulon.lineTo((float) (cx + p2), (float) (cy + p3));
+		boulon.lineTo((float) (cx + p3), (float) (cy + p2));
+		boulon.lineTo((float) (cx), (float) (cy + p2));
+		boulon.lineTo((float) (cx - p3), (float) (cy + p2));
+		boulon.lineTo((float) (cx - p2), (float) (cy + p3));
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(boulon);
+
+		double rad_in = minsize * 0.27;
+
+		g2d.setPaint(grad_back);
+		g2d.fill(new Ellipse2D.Double(cx - rad_in / 2, cy - rad_in / 2, rad_in, rad_in));
+	}
+
+	private void paintFlower(Graphics2D g2d, GradientPaint grad_back, double cx, double cy,
+			double minsize) {
+		double rad = minsize / 7;
+
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(new Ellipse2D.Double(cx - 2 * rad, cy - 1 * rad, 2 * rad, 2 * rad));
+		g2d.fill(new Ellipse2D.Double(cx - 1 * rad, cy - 2 * rad, 2 * rad, 2 * rad));
+		g2d.fill(new Ellipse2D.Double(cx + 0 * rad, cy - 1 * rad, 2 * rad, 2 * rad));
+		g2d.fill(new Ellipse2D.Double(cx - 1 * rad, cy + 0 * rad, 2 * rad, 2 * rad));
+
+		rad *= 0.9;
+
+		g2d.setPaint(grad_back);
+		g2d.fill(new Ellipse2D.Double(cx - rad, cy - rad, 2 * rad, 2 * rad));
+	}
+
+	private void paintLys(Graphics2D g2d, double cx, double cy, double minsize) {
+		double p1 = minsize * 0.35;
+		double p2 = p1 * 0.66;
+		double p3 = p1 * 0.33;
+		double p4 = p1 * 0.20;
+
+		g2d.setColor(patternFg.getColor());
+		GeneralPath lys = new GeneralPath();
+		lys.moveTo((float) (cx - p1), (float) (cy));
+		lys.lineTo((float) (cx - p2), (float) (cy - p3));
+		lys.lineTo((float) (cx - p4), (float) (cy - p4));
+		lys.lineTo((float) (cx - p3), (float) (cy - p2));
+		lys.lineTo((float) (cx), (float) (cy - p1));
+		lys.lineTo((float) (cx + p3), (float) (cy - p2));
+		lys.lineTo((float) (cx + p4), (float) (cy - p4));
+		lys.lineTo((float) (cx + p2), (float) (cy - p3));
+		lys.lineTo((float) (cx + p1), (float) (cy));
+		lys.lineTo((float) (cx + p2), (float) (cy + p3));
+		lys.lineTo((float) (cx + p4), (float) (cy + p4));
+		lys.lineTo((float) (cx + p3), (float) (cy + p2));
+		lys.lineTo((float) (cx), (float) (cy + p1));
+		lys.lineTo((float) (cx - p3), (float) (cy + p2));
+		lys.lineTo((float) (cx - p4), (float) (cy + p4));
+		lys.lineTo((float) (cx - p2), (float) (cy + p3));
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(lys);
+	}
+
+	private void paintRoundcastle(Graphics2D g2d, double cx, double cy, double minsize) {
+		double p1 = minsize * 0.23;
+		double p2 = p1 * 0.90; // Main circle radius
+		double p3 = p1 * 0.45; // External circles radius
+		double p4 = p1 * 0.90; // Inner star major radius
+		double p5 = p1 * 0.30; // Inner star minor radius
+
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(new Ellipse2D.Double(cx - p2, cy - p2, 2 * p2, 2 * p2));
+		g2d.fill(new Ellipse2D.Double(cx - p1 - p3, cy - p3, 2 * p3, 2 * p3));
+		g2d.fill(new Ellipse2D.Double(cx - p3, cy - p1 - p3, 2 * p3, 2 * p3));
+		g2d.fill(new Ellipse2D.Double(cx + p1 - p3, cy - p3, 2 * p3, 2 * p3));
+		g2d.fill(new Ellipse2D.Double(cx - p3, cy + p1 - p3, 2 * p3, 2 * p3));
+
+		GeneralPath innerStar = new GeneralPath();
+		innerStar.moveTo((float) (cx), (float) (cy - p4));
+		innerStar.lineTo((float) (cx + p5), (float) (cy - p5));
+		innerStar.lineTo((float) (cx + p4), (float) (cy));
+		innerStar.lineTo((float) (cx + p5), (float) (cy + p5));
+		innerStar.lineTo((float) (cx), (float) (cy + p4));
+		innerStar.lineTo((float) (cx - p5), (float) (cy + p5));
+		innerStar.lineTo((float) (cx - p4), (float) (cy));
+		innerStar.lineTo((float) (cx - p5), (float) (cy - p5));
+		innerStar.lineTo((float) (cx), (float) (cy - p4));
+
+		g2d.setColor(patternBg.getColor());
+		g2d.fill(innerStar);
+	}
+
+	private void paintCrossballs(Graphics2D g2d, double cx, double cy, double minsize) {
+		double p1 = minsize * 0.23;
+		double p2 = p1 * 0.30;
+		double p3 = p1 * 0.45;
+
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(new Rectangle2D.Double(cx - p1, cy - p2, 2 * p1, 2 * p2));
+		g2d.fill(new Rectangle2D.Double(cx - p2, cy - p1, 2 * p2, 2 * p1));
+		g2d.fill(new Ellipse2D.Double(cx - p1 - p3, cy - p3, 2 * p3, 2 * p3));
+		g2d.fill(new Ellipse2D.Double(cx - p3, cy - p1 - p3, 2 * p3, 2 * p3));
+		g2d.fill(new Ellipse2D.Double(cx + p1 - p3, cy - p3, 2 * p3, 2 * p3));
+		g2d.fill(new Ellipse2D.Double(cx - p3, cy + p1 - p3, 2 * p3, 2 * p3));
+	}
+
+	private void paintCastle(Graphics2D g2d, double cx, double cy, double minsize) {
+		double p1 = minsize * 0.35;
+		double p2 = p1 * 0.66;
+		double p3 = p1 * 0.33;
+		double p4 = p1 * 0.15;
+
+		GeneralPath castle = new GeneralPath();
+		castle.moveTo((float) (cx - p1), (float) (cy));
+		castle.lineTo((float) (cx - p2), (float) (cy - p3));
+		castle.lineTo((float) (cx - p2 + p4), (float) (cy - p3 + p4));
+		castle.lineTo((float) (cx - p3 + p4), (float) (cy - p2 + p4));
+		castle.lineTo((float) (cx - p3), (float) (cy - p2));
+		castle.lineTo((float) (cx), (float) (cy - p1));
+		castle.lineTo((float) (cx + p3), (float) (cy - p2));
+		castle.lineTo((float) (cx + p3 - p4), (float) (cy - p2 + p4));
+		castle.lineTo((float) (cx + p2 - p4), (float) (cy - p3 + p4));
+		castle.lineTo((float) (cx + p2), (float) (cy - p3));
+		castle.lineTo((float) (cx + p1), (float) (cy));
+		castle.lineTo((float) (cx + p2), (float) (cy + p3));
+		castle.lineTo((float) (cx + p2 - p4), (float) (cy + p3 - p4));
+		castle.lineTo((float) (cx + p3 - p4), (float) (cy + p2 - p4));
+		castle.lineTo((float) (cx + p3), (float) (cy + p2));
+		castle.lineTo((float) (cx), (float) (cy + p1));
+		castle.lineTo((float) (cx - p3), (float) (cy + p2));
+		castle.lineTo((float) (cx - p3 + p4), (float) (cy + p2 - p4));
+		castle.lineTo((float) (cx - p2 + p4), (float) (cy + p3 - p4));
+		castle.lineTo((float) (cx - p2), (float) (cy + p3));
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(castle);
+		g2d.setColor(patternFg.getColor().darker());
+		g2d.draw(castle);
+	}
+
+	private void paintSquare(Graphics2D g2d, double cx, double cy, double minsize) {
+		double p1 = minsize * 0.35;
+		double p2 = p1 * 0.50;
+
+		GeneralPath square_ext = new GeneralPath();
+		square_ext.moveTo((float) (cx - p1), (float) (cy));
+		square_ext.lineTo((float) (cx), (float) (cy - p1));
+		square_ext.lineTo((float) (cx + p1), (float) (cy));
+		square_ext.lineTo((float) (cx), (float) (cy + p1));
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(square_ext);
+		g2d.setColor(patternFg.getColor().darker());
+		g2d.draw(square_ext);
+
+		GeneralPath square_int = new GeneralPath();
+		square_int.moveTo((float) (cx - p2), (float) (cy));
+		square_int.lineTo((float) (cx), (float) (cy - p2));
+		square_int.lineTo((float) (cx + p2), (float) (cy));
+		square_int.lineTo((float) (cx), (float) (cy + p2));
+		g2d.setColor(patternBg.getColor());
+		g2d.fill(square_int);
+		g2d.setColor(patternBg.getColor().darker());
+		g2d.draw(square_int);
+	}
+
+	private void paintToxic(Graphics2D g2d, double cx, double cy, double minsize) {
+		double p1 = minsize * 0.30;
+		double p2 = p1 * 0.30;
+		double p3 = p2 * 1.10;
+
+		Ellipse2D circle_ext = new Ellipse2D.Double(cx - p1, cy - p1, 2 * p1, 2 * p1);
+		g2d.setColor(patternFg.getColor());
+		g2d.fill(circle_ext);
+		g2d.setColor(patternFg.getColor().darker());
+		g2d.draw(circle_ext);
+
+		GeneralPath cross_int = new GeneralPath();
+		cross_int.moveTo((float) (cx - p2), (float) (cy));
+		cross_int.lineTo((float) (cx - p2 - p3), (float) (cy - p3));
+		cross_int.lineTo((float) (cx - p3), (float) (cy - p2 - p3));
+
+		cross_int.lineTo((float) (cx), (float) (cy - p2));
+		cross_int.lineTo((float) (cx + p3), (float) (cy - p2 - p3));
+		cross_int.lineTo((float) (cx + p2 + p3), (float) (cy - p3));
+
+		cross_int.lineTo((float) (cx + p2), (float) (cy));
+		cross_int.lineTo((float) (cx + p2 + p3), (float) (cy + p3));
+		cross_int.lineTo((float) (cx + p3), (float) (cy + p2 + p3));
+
+		cross_int.lineTo((float) (cx), (float) (cy + p2));
+		cross_int.lineTo((float) (cx - p3), (float) (cy + p2 + p3));
+		cross_int.lineTo((float) (cx - p2 - p3), (float) (cy + p3));
+
+		g2d.setColor(patternBg.getColor());
+		g2d.fill(cross_int);
+		g2d.setColor(patternBg.getColor().darker());
+		g2d.draw(cross_int);
+	}
+
+	private void paintStar(Graphics2D g2d, double cx, double cy, double minsize) {
+		double rad1 = minsize * 0.3;
+		double rad2 = rad1 * 0.5;
+
+		g2d.setColor(patternFg.getColor());
+		GeneralPath star = new GeneralPath();
+		star.moveTo((float) (cx - rad1), (float) (cy));
+
+		for (int a = 0; a <= 360; a += 30) {
+			double rad;
+
+			if (a % 60 == 0) {
+				rad = rad1;
+			} else {
+				rad = rad2;
+			}
+
+			double arad = Math.PI * 2. * a / 360.;
+
+			star.lineTo((float) (cx + rad * Math.cos(arad)),
+					(float) (cy + rad * Math.sin(arad)));
+		}
+
+		g2d.fill(star);
 	}
 
 	public static List<Pattern> getAllPatterns() {

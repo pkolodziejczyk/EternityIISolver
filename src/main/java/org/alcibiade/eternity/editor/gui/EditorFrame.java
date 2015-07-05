@@ -50,6 +50,7 @@ import org.alcibiade.eternity.editor.gui.action.FillGridAction;
 import org.alcibiade.eternity.editor.gui.action.FillGridBorderAction;
 import org.alcibiade.eternity.editor.gui.action.FillGridCenterAction;
 import org.alcibiade.eternity.editor.gui.action.FlipGridAction;
+import org.alcibiade.eternity.editor.gui.action.LoadBoardAction;
 import org.alcibiade.eternity.editor.gui.action.LoadGridAction;
 import org.alcibiade.eternity.editor.gui.action.PasteGridAction;
 import org.alcibiade.eternity.editor.gui.action.ResetGridAction;
@@ -59,12 +60,92 @@ import org.alcibiade.eternity.editor.gui.action.RotateGridCenterAction;
 import org.alcibiade.eternity.editor.gui.action.ShuffleGridAction;
 import org.alcibiade.eternity.editor.gui.action.SwitchQuadIdsGridAction;
 import org.alcibiade.eternity.editor.model.GridModel;
+import org.alcibiade.eternity.editor.model.Pattern;
+import org.alcibiade.eternity.editor.model.QuadModel;
 
 public class EditorFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int DEFAULT_SIZE = 7;
+	private static final int DEFAULT_SIZE = 16;
+
+	public EditorFrame(GridModel gridmodel) {
+		super("Eternity II");
+
+		// -- Grid components --
+
+		GridView grid = new GridView(gridmodel);
+		grid.setPreferredSize(new Dimension(750, 750));
+
+		// -- Info panel --
+
+		Document scoreDocument = new PlainDocument();
+		Document statusDocument = new PlainDocument();
+		Document infosDocument = new PlainDocument();
+
+		JTextField statusTf = new JTextField(statusDocument, null, 16);
+		JTextField scoreTf = new JTextField(scoreDocument, null, 16);
+		JTextField infosTf = new JTextField(infosDocument, null, 16);
+		statusTf.setEditable(false);
+		scoreTf.setEditable(false);
+		infosTf.setEditable(false);
+
+		JPanel labels = new JPanel(new GridLayout(3, 1));
+		labels.add(new JLabel("Grid infos"));
+		labels.add(new JLabel("Grid status"));
+		labels.add(new JLabel("Score"));
+		labels.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+		JPanel infos = new JPanel(new GridLayout(3, 1));
+		infos.add(infosTf);
+		infos.add(statusTf);
+		infos.add(scoreTf);
+		infos.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+		JCheckBox showIds = new JCheckBox(new SwitchQuadIdsGridAction(grid));
+
+		JPanel infoPanel = new JPanel(new BorderLayout());
+		infoPanel.add(BorderLayout.WEST, labels);
+		infoPanel.add(BorderLayout.CENTER, infos);
+		infoPanel.add(BorderLayout.SOUTH, showIds);
+
+		infoPanel
+				.setBorder(
+						BorderFactory
+								.createCompoundBorder(
+										BorderFactory.createCompoundBorder(
+												BorderFactory
+														.createTitledBorder("Grid Informations"),
+												BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+								infoPanel.getBorder()));
+
+		// -- Solver panel --
+
+		JPanel solvePanel = new SolverManager(grid);
+
+		// -- Main frame --
+
+		JPanel partRight = new JPanel(new BorderLayout());
+		partRight.add(BorderLayout.NORTH, infoPanel);
+		partRight.add(BorderLayout.CENTER, solvePanel);
+
+		JPanel frameContent = new JPanel(new BorderLayout());
+		frameContent.add(BorderLayout.CENTER, grid);
+		frameContent.add(BorderLayout.EAST, partRight);
+
+		new GridAnalyst(grid, scoreDocument, statusDocument, infosDocument, showIds);
+
+		setContentPane(frameContent);
+		setJMenuBar(buildMenuBar(grid));
+
+		pack();
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+		Dimension mysize = getSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		setLocation(screenSize.width / 2 - (mysize.width / 2),
+				screenSize.height / 2 - (mysize.height / 2));
+	}
 
 	public EditorFrame() {
 		super("Eternity II");
@@ -108,9 +189,15 @@ public class EditorFrame extends JFrame {
 		infoPanel.add(BorderLayout.CENTER, infos);
 		infoPanel.add(BorderLayout.SOUTH, showIds);
 
-		infoPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder("Grid Informations"), BorderFactory
-						.createEmptyBorder(5, 5, 5, 5)), infoPanel.getBorder()));
+		infoPanel
+				.setBorder(
+						BorderFactory
+								.createCompoundBorder(
+										BorderFactory.createCompoundBorder(
+												BorderFactory
+														.createTitledBorder("Grid Informations"),
+												BorderFactory.createEmptyBorder(5, 5, 5, 5)),
+								infoPanel.getBorder()));
 
 		// -- Solver panel --
 
@@ -136,8 +223,8 @@ public class EditorFrame extends JFrame {
 
 		Dimension mysize = getSize();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation(screenSize.width / 2 - (mysize.width / 2), screenSize.height / 2
-				- (mysize.height / 2));
+		setLocation(screenSize.width / 2 - (mysize.width / 2),
+				screenSize.height / 2 - (mysize.height / 2));
 	}
 
 	private JMenuBar buildMenuBar(GridView gridView) {
@@ -348,6 +435,10 @@ public class EditorFrame extends JFrame {
 		mgLoad.add(new JMenuItem(new LoadGridAction(gridModel,
 				"org/alcibiade/eternity/editor/models/model_yannick_1623.txt", "16x16x23 Original",
 				gridView)));
+		mgLoad.add(new JMenuItem(
+				new LoadBoardAction(gridModel, "Etrenity with out Locked", gridView)));
+		mgLoad.add(new JMenuItem(
+				new LoadBoardAction(gridModel, "Etrenity with Locked",  gridView,true)));
 
 		JMenu mInfo = new JMenu("?");
 		mInfo.add(new JMenuItem(new AboutAction(this)));

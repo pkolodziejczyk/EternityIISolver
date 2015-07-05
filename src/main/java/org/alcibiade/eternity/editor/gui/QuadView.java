@@ -223,6 +223,9 @@ public class QuadView extends JComponent implements QuadObserver, MouseListener,
 				* dx + ox, dy + oy);
 		drawPatternId(g2d, Integer.toString(model.getPattern(QuadModel.DIR_WEST).getCode()), 0.3
 				* dx + ox, dy + oy);
+		
+		drawPatternId(g2d, Integer.toString(model.getId()), dx
+				+ ox, dy + oy);
 
 	}
 
